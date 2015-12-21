@@ -1,8 +1,6 @@
 from yahoo_finance import Share
-#import numpy as np
 import pandas as pd
 from pandas import DataFrame
-#from matplotlib import pyplot as plt
 
 start_date = '2000-01-01'
 end_date = '2015-01-01'
