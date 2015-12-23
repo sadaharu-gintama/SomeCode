@@ -4,8 +4,15 @@ from pandas import DataFrame
 
 start_date = '2000-01-01'
 end_date = '2015-01-01'
-
-sticker = ['SPY','ASHR','AGG','GLD','DSUM','HEWG','EWJ','XLU', 'XLE']
+# SCHB: Schwab U.S. Broad Market ETF
+# SCHA: Schwab U.S. Small Cap ETF
+# SCHH: Schwab U.S. REITS ETF
+# SCHF: Schwab International Equity ETF
+# SCHE: Schwab Emerging Market ETF
+# SCHZ: Schwab U.S. Aggregate Bond ETF
+# SCHP: Schwab U.S. Tips ETF
+# DSUM: PowerShare Chinese Yuan Dim Sum Bond ETF
+sticker = ['SCHB','SCHA','SCHH','SCHF','SCHE','SCHZ','SCHP','DSUM']
 stocks = [Share(x) for x in sticker]
 rtns = DataFrame()
 for stock in stocks:
