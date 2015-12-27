@@ -4,7 +4,7 @@ from pandas import DataFrame
 import matplotlib.pyplot as plt
 import matplotlib.dates as Dates
 
-start_date = '2015-01-01'
+start_date = '2014-01-01'
 end_date = '2015-12-01'
 # SCHB: Schwab U.S. Broad Market ETF
 # SCHA: Schwab U.S. Small Cap ETF
