@@ -44,7 +44,7 @@ def simulate(start_date, end_date,
     average_daily_return = np.average(daily_return)
     #print average_daily_return
     # sharpe ratio
-    sharpe_ratio = abs(np.sqrt(252.0) * average_daily_return / std)
+    sharpe_ratio = (np.sqrt(252.0) * average_daily_return / std)
     #print sharpe_ratio
     # accumulate return
     accumulate_return = daily_portfolio_value[-1] / daily_portfolio_value[0]
