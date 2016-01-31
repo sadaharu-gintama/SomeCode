@@ -16,12 +16,11 @@ def ReadCSV(order_file):
         for row in reader:
             trade_date.append(dt.datetime(int(row[0]), int(row[1]), int(row[2]), 16, 0,0))
             symbol.append(row[3])
-            if row[4] == 'Buy':
+            if row[4] == 'BUY':
                 order.append(int(row[5]))
             else:
                 order.append(-int(row[5]))
     sorted_order = sorted(zip(trade_date, symbol, order))
-
     return zip(*sorted_order)
 
 def ReadData(trade_date, symbol):
@@ -57,25 +56,38 @@ def UpdateDailyValue(day, cash, own, dclose):
     return daily_value
 
 if __name__ == '__main__':
-    start_value = float(sys.argv[1])
-    order_file = sys.argv[2]
-    output_file = sys.argv[3]
-    trade_date, symbol, order = ReadCSV(order_file)
-    d_data = ReadData(trade_date, set(symbol))
-    d_close = d_data['close']
+    p_list = [6,7,8,9,10]
+    for price in p_list:
+        start_value = 50000.0
+        order_file = 'trade' + str(price) + '.csv'
+        trade_date, symbol, order = ReadCSV(order_file)
+        d_data = ReadData(trade_date, set(symbol))
+        d_close = d_data['close']
 
-    # prepare output
-    dt_start = trade_date[0]
-    dt_end = trade_date[-1]
+        # prepare output
+        dt_start = trade_date[0]
+        dt_end = trade_date[-1]
 
-    ldt_timestaps = du.getNYSEdays(dt_start, dt_end, dt.timedelta(hours = 16))
-    cash = start_value
-    own = dict(zip(set(symbol), [0] * len(set(symbol))))
-    print own
-    for day in ldt_timestaps:
-        for tday in zip(trade_date, symbol, order):
-            if day == tday[0]:
-                cash = UpdateCash(cash, tday, d_close)
-                own = UpdateOwn(own, tday)
-        daily_value = UpdateDailyValue(day, cash, own, d_close)
-        print day, daily_value
+        ldt_timestaps = du.getNYSEdays(dt_start, dt_end, dt.timedelta(hours = 16))
+        cash = start_value
+        ls_time = list()
+        own = dict(zip(set(symbol), [0] * len(set(symbol))))
+
+        for day in ldt_timestaps:
+            for tday in zip(trade_date, symbol, order):
+                if day == tday[0]:
+                    cash = UpdateCash(cash, tday, d_close)
+                    own = UpdateOwn(own, tday)
+            daily_value = UpdateDailyValue(day, cash, own, d_close)
+            ls_time.append(daily_value)
+
+        ls_return = list()
+        for i in range(1, len(ls_time)):
+            ls_return.append(ls_time[i] / ls_time[i-1] - 1.0)
+
+        std_metric = np.std(ls_return)
+        sharpe = np.sqrt(252.0) * np.average(ls_return) / std_metric
+        with open('result' + str(price) + '.txt','w') as f:
+            f.write('STD:' + str(std_metric) + '\n')
+            f.write('Sharpe:' + str(sharpe) + '\n')
+            f.write('Return:' + str(ls_time[-1] / start_value) + '\n')
