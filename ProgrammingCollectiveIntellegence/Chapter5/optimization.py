@@ -95,3 +95,60 @@ def hillClimb(domain, costf = scheduleCost):
             break
 
     return sol
+
+def annealingOptimize(domain, costf = scheduleCost, T = 10000.0, cool = 0.95, step = 1):
+    sol = [random.randint(domain[i][0], domain[i][1]) for i in range(len(domain))]
+
+    while T > 0.1:
+        i = random.randint(0, len(domain) - 1)
+        dir = random.randint(-step, step)
+        vec = sol[:]
+        vec[i] += dir
+        if vec[i] < domain[i][0]: vec[i] = domain[i][0]
+        elif vec[i] > domain[i][1]: vec[i] = domain[i][1]
+
+        ca = costf(sol)
+        cb = costf(vec)
+
+        if cb < ca or random.random() < pow(math.e, -(cb - ca) / T):
+            sol = vec
+
+        T = T * cool
+
+    return sol
+
+def geneticOptimize(domain, costf = scheduleCost, popSize = 50, step = 1,
+                    mutProb = 0.2, elite = 0.2, maxIter = 100):
+    def mutate(vec):
+        i = random.randint(0, len(domain) - 1)
+        if random.random < 0.5 and vec[i] > domain[i][0]:
+            return vec[0 : i] + [vec[i] - step] + vec[i + 1 :]
+        elif vec[i] < domain[i][1]:
+            return vec[0 : i] + [vec[i] + step] + vec[i + 1 :]
+
+    def crossOver(r1, r2):
+        i = random.randint(1, len(domain) - 2)
+        return r1[0 : i] + r2[i :]
+
+    pop = list()
+    for i in range(popSize):
+        vec = [random.randint(domain[i][0], domain[i][1])
+               for i in range(len(domain))]
+        pop.append(vec)
+
+    topElite = int(elite * popSize)
+    for i in range(maxIter):
+        scores = [(costf(v), v) for v in pop if v != None]
+        scores.sort()
+        ranked = [v for (s, v) in scores]
+        pop = ranked[0 : topElite]
+        while len(pop) < popSize:
+            if random.random() < mutProb:
+                pop.append(mutate(ranked[random.randint(0, topElite)]))
+            else:
+                c1 = random.randint(0, topElite)
+                c2 = random.randint(0, topElite)
+                pop.append(crossOver(ranked[c1], ranked[c2]))
+        print scores[0][0]
+
+    return scores[0][1]
