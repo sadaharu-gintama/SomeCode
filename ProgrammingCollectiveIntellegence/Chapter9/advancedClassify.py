@@ -156,3 +156,4 @@ def getOffset(rows, gamma = 10):
     sum1 = sum([sum([rbf(v1, v2, gamma) for v1 in l1]) for v2 in l1])
 
     return (1.0 / (len(l1) ** 2)) * sum1 - (1.0 / (len(l0) ** 2)) * sum0
+
