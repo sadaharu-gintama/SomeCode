@@ -19,14 +19,15 @@ def winePrice(rating, age):
 
 def wineSet1():
     rows = list()
-    rating = random() * 50 + 50
-    age = random() * 50
+    for i in range(300):
+        rating = random() * 50 + 50
+        age = random() * 50
 
-    price = winePrice(rating, age)
-    price *= (random() * 0.4 + 0.8)
+        price = winePrice(rating, age)
+        price *= (random() * 0.4 + 0.8)
 
-    rows.append({'input': (rating, age),
-                 'result': price})
+        rows.append({'input': (rating, age),
+                     'result': price})
     return rows
 
 def euclidean(v1, v2):
@@ -121,7 +122,7 @@ def wineSet2():
 def rescale(data, scale):
     scaledData = list()
     for row in data:
-        scaled = [scale[i] * row['input'][1]
+        scaled = [scale[i] * row['input'][i]
                   for i in range(len(scale))]
         scaledData.append({'input': scaled, 'result': row['result']})
     return scaledData
